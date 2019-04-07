@@ -1,0 +1,37 @@
+---
+title: "Untitled"
+author: "hw07(2)"
+date: "2019年4月7日"
+output: html_document
+---
+
+
+```{r}
+chartSeries(`0050.TW`["2018::2019-04"],theme="white")
+addSMA(n = 50, col = "red")
+addSMA(n = 100, col = "blue")
+```
+
+```{r}
+chartSeries(`0056.TW`,subset='2019::2019-04',theme="white",name="0056")
+addMACD()
+addRSI()
+addSMA(n = 50, col = "red")
+addSMA(n = 100, col = "blue")
+```
+
+```{r}
+chartSeries(`006205.TW`,subset='2019::2019-04',theme="white",name="006205")
+addMACD()
+addRSI()
+addSMA(n = 50, col = "red")
+addSMA(n = 100, col = "blue")
+```
+
+```{r}
+chartSeries(`00646.TW`,subset='2019::2019-04',theme="white",name="00646")
+addMACD()
+addRSI()
+addSMA(n = 50, col = "red")
+addSMA(n = 100, col = "blue")
+```
