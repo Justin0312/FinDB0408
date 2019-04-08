@@ -124,66 +124,201 @@ plotbt.strategy.sidebyside(models, return.table=T)
 # Example: using etf4 to compare their performance using 50-day and 200-day moving average investment strategy 
 # https://systematicinvestor.wordpress.com/2014/08/01/adjusted-momentum/
 #*************************************************************************************
-etf4.all<-readRDS("~/git/FinDB_2019/etf4_xts_all")
+etf4.all<-readRDS("C:/hw08/etf4_xts_all")
 head(etf4.all)
 str(etf4.all)
 etf4.all.1<-etf4.all[complete.cases(etf4.all),]
 head(etf4.all.1)
 tail(etf4.all.1)
-# 0050
-data1<-new.env()
-data1$prices<-etf4.all.1$`0050`
-prices<-data1$prices
+#006025
+data2<-new.env()
+data2$prices<-etf4.all.1$`0056`
+prices<-data2$prices
+prices
 
 sma50<-SMA(prices, 50)
 head(sma50, 51)
-# buy and hold for 0050
-bt.prep(data1, align='keep.all')
-names(data1)
-data1$weight
-data1$execution.price = data1$prices = etf4.all.1$`0050`
-data1$weight[] = 1
-buy.hold.0050 <- bt.run.share(data1, clean.signal=F, trade.summary = TRUE)
-buy.hold.0050 <-bt.run(data1)
-# sma 200 for 0050
-prices<-data1$prices
+
+# buy and hold for 0056
+bt.prep(data2, align='keep.all')
+names(data2)
+data2$dates
+data2$prices
+data2$prices<-prices
+
+class(data2$dates)
+data2$weight
+data2$execution.price = prices
+
+data2$weight[] = 1
+buy.hold.0056 <- bt.run.share(data2, clean.signal=F, trade.summary = TRUE)
+buy.hold.0056 <-bt.run(data2)
+# sma 200 for 0056
+prices<-data2$prices
 sma200<-SMA(prices, 200)
 head(sma200, 201)
-data1$weight[] <- iif(prices >= sma200, 1, 0)
-sma200.0050 <- bt.run(data1, trade.summary=T)   
-# sma 50 for 0050
+data2$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.006025 <- bt.run(data2, trade.summary=T)
+# sma 50 for 0056
 sma50<-SMA(prices, 50)
 head(sma50, 51)
-data1$weight[] <- iif(prices >= sma50, 1, 0)
-sma50.0050 <- bt.run(data1, trade.summary=T)
-# sma 50 for 005, short allowed
-data1$weight[] <- iif(prices >= sma50, 1, -1)
-sma50.0050.short <- bt.run(data1, trade.summary=T)
+data2$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.006025 <- bt.run(data2, trade.summary=T)
+# sma 50 for 0056, short allowed
+data2$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.0056.short <- bt.run(data2, trade.summary=T)
 # summary of investment
-models<-list("SMA50"= sma50.0050, 
-             "SMA200"= sma200.0050, 
-             "SMA50_short" = sma50.0050.short, 
-             "BH 0050" = buy.hold.0050)
+models<-list("SMA50"= sma50.006025, 
+             "SMA200" = sma200.006205,
+             "SMA50_short" = sma50.006025.short, 
+             "BH 006025" = buy.hold.006025)
 strategy.performance.snapshoot(models, T)
 strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
 plotbt.strategy.sidebyside(models, return.table=T)
-# You can plot in ggplot2
-library(ggplot2)
-all.0050<-merge.xts(sma50.0050$equity, 
-            sma50.0050.short$equity, 
-            sma200.0050$equity, 
-            buy.hold.0050$equity)
-colnames(all.0050)<-c("sma50", "sma50 short", "sma200", "BH")
-head(all.0050)
-all.0050.long<-fortify(all.0050, melt=T)
-head(all.0050.long)
 #
-title = "Cumulative returns of 0050s"
-p = ggplot(all.0050.long, aes(x = Index, y = Value)) +
+library(ggplot2)
+all.006025<-merge.xts(sma50.006025$equity, 
+                    sma50.006025.short$equity, 
+                    
+                    buy.hold.006025$equity)
+colnames(all.006205)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.006025)
+all.006025.long<-fortify(all.006205, melt=T)
+head(all.006205.long)
+#
+title = "Cumulative returns of 006025s"
+p = ggplot(all.006025.long, aes(x = Index, y = Value)) +
   geom_line(aes(linetype = Series, color = Series)) +
   #geom_point(aes(shape = Series))+
   xlab("year") + ylab("cumulative returns")+
   ggtitle(title)
 p
+#----------------------------------------------------------------------------------------
+#006025
+data3<-new.env()
+data3$prices<-etf4.all.1$`006205`
+prices<-data3$prices
+prices
 
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+
+# buy and hold for 006205
+bt.prep(data3, align='keep.all')
+names(data3)
+data3$dates
+data3$prices
+data3$prices<-prices
+
+class(data3$dates)
+data3$weight
+data3$execution.price = prices
+
+data3$weight[] = 1
+buy.hold.006205 <- bt.run.share(data3, clean.signal=F, trade.summary = TRUE)
+buy.hold.006205 <-bt.run(data3)
+# sma 200 for 006025
+prices<-data3$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data3$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.006205 <- bt.run(data3, trade.summary=T)
+# sma 50 for 006025
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data3$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.006205 <- bt.run(data3, trade.summary=T)
+# sma 50 for 006205, short allowed
+data3$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.006205.short <- bt.run(data3, trade.summary=T)
+# summary of investment
+models<-list("SMA50"= sma50.006205,
+             "SMA200"= sma200.006205,
+             "SMA50_short" = sma50.006205.short, 
+             "BH 006205" = buy.hold.006205)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+#
+library(ggplot2)
+all.006205<-merge.xts(sma50.006205$equity, 
+                    sma50.006205.short$equity, 
+                    sma200.006205$equity,
+                    buy.hold.006205$equity)
+colnames(all.006205)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.006205)
+all.006205.long<-fortify(all.006205, melt=T)
+head(all.006205.long)
+#
+title = "Cumulative returns of 006205s"
+p = ggplot(all.006205.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
+#----------------------------------------------------------------------------------
+#00646
+data4<-new.env()
+data4$prices<-etf4.all.1$`00646`
+prices<-data4$prices
+prices
+
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+
+# buy and hold for 00646
+bt.prep(data4, align='keep.all')
+names(data4)
+data4$dates
+data4$prices
+data4$prices<-prices
+
+class(data4$dates)
+data4$weight
+data4$execution.price = prices
+
+data4$weight[] = 1
+buy.hold.00646 <- bt.run.share(data4, clean.signal=F, trade.summary = TRUE)
+buy.hold.00646 <-bt.run(data4)
+# sma 200 for 00646
+prices<-data4$prices
+sma200<-SMA(prices, 200)
+head(sma200, 201)
+data4$weight[] <- iif(prices >= sma200, 1, 0)
+sma200.00646 <- bt.run(data4, trade.summary=T)
+# sma 50 for 00646
+sma50<-SMA(prices, 50)
+head(sma50, 51)
+data4$weight[] <- iif(prices >= sma50, 1, 0)
+sma50.00646 <- bt.run(data4, trade.summary=T)
+# sma 50 for 00646, short allowed
+data4$weight[] <- iif(prices >= sma50, 1, -1)
+sma50.00646.short <- bt.run(data4, trade.summary=T)
+# summary of investment
+models<-list("SMA50"= sma50.00646,
+             "SMA200"= sma200.00646,
+             "SMA50_short" = sma50.00646.short, 
+             "BH 00646" = buy.hold.00646)
+strategy.performance.snapshoot(models, T)
+strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
+plotbt.strategy.sidebyside(models, return.table=T)
+#
+library(ggplot2)
+all.00646<-merge.xts(sma50.00646$equity, 
+                      sma50.00646.short$equity, 
+                      sma200.00646$equity,
+                      buy.hold.00646$equity)
+colnames(all.00646)<-c("sma50", "sma50 short", "sma200", "BH")
+head(all.00646)
+all.00646.long<-fortify(all.00646, melt=T)
+head(all.00646.long)
+#
+title = "Cumulative returns of 00646s"
+p = ggplot(all.00646.long, aes(x = Index, y = Value)) +
+  geom_line(aes(linetype = Series, color = Series)) +
+  #geom_point(aes(shape = Series))+
+  xlab("year") + ylab("cumulative returns")+
+  ggtitle(title)
+p
 

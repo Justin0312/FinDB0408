@@ -1,0 +1,10 @@
+20170918.install
+Name:Windows 10(中文版)v.1703.21101
+自然輸入法->40020
+
+20170925.install
+Name:Windows 10(中文版)v.1703.21102
+EverCam8.2->8.5
+R-replace->fb_oauth
+install->POTplayer
+install->NTPclock
